@@ -1,22 +1,47 @@
 <template>
   <ion-page>
+    <ion-header :translucent="true">
+      <ion-toolbar color="primary">
+        <ion-title>Crypto App</ion-title>
+      </ion-toolbar>
+    </ion-header>
+
     <ion-content :fullscreen="true" class="page-background">
-      <div class="phone-frame">
-        <div class="phone-screen">
-          <div class="toolbar-area">
+      <main class="app-shell">
+        <section class="intro-card">
+          <p class="eyebrow">Tugas 03</p>
+          <h1>Daftar Cryptocurrency Dunia</h1>
+          <p class="description">
+            Aplikasi ini mengambil data dari CoinLore API dan menampilkan field
+            <strong>rank</strong>, <strong>name</strong>, <strong>symbol</strong>,
+            dan <strong>price_usd</strong>.
+          </p>
+
+          <div class="action-row">
             <ion-button class="refresh-button" @click="ambilData" :disabled="loading">
-              {{ loading ? 'Loading' : 'Refresh' }}
+              {{ loading ? 'Memuat...' : 'Refresh' }}
             </ion-button>
+            <span class="data-count">{{ cryptos.length }} data</span>
           </div>
+        </section>
+
+        <section class="data-card">
+          <header class="data-header">
+            <div>
+              <p class="eyebrow">CoinLore Tickers</p>
+              <h2>Harga Crypto</h2>
+            </div>
+            <span class="api-badge">Online API</span>
+          </header>
 
           <p v-if="error" class="state-message error-message">{{ error }}</p>
-          <p v-else-if="loading" class="state-message">Memuat data...</p>
+          <p v-else-if="loading" class="state-message">Memuat data cryptocurrency...</p>
           <p v-else-if="cryptos.length === 0" class="state-message">
             Tekan Refresh untuk memuat data.
           </p>
 
           <div v-else class="crypto-list">
-            <article v-for="crypto in displayedCryptos" :key="crypto.id" class="crypto-row">
+            <article v-for="crypto in cryptos" :key="crypto.id" class="crypto-row">
               <div class="rank-column">
                 <span>Rank</span>
                 <strong>{{ crypto.rank }}</strong>
@@ -33,16 +58,14 @@
               </div>
             </article>
           </div>
-        </div>
-
-        <div class="home-indicator"></div>
-      </div>
+        </section>
+      </main>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonButton, IonContent, IonPage } from '@ionic/vue'
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue'
 import { defineComponent } from 'vue'
 
 import EndPointAccess from '@/services/EndPointAccess'
@@ -70,11 +93,6 @@ export default defineComponent({
   },
   mounted() {
     this.ambilData()
-  },
-  computed: {
-    displayedCryptos(): CryptoCurrency[] {
-      return this.cryptos.slice(0, 7)
-    },
   },
   methods: {
     async ambilData() {
@@ -105,52 +123,107 @@ export default defineComponent({
   components: {
     IonButton,
     IonContent,
+    IonHeader,
     IonPage,
+    IonTitle,
+    IonToolbar,
   },
 })
 </script>
 
 <style scoped>
 .page-background::part(background) {
+  background: #eef3ff;
+}
+
+.app-shell {
+  display: grid;
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: clamp(14px, 4vw, 36px);
+  width: 100%;
+}
+
+.intro-card,
+.data-card {
   background: #ffffff;
+  border: 1px solid rgba(109, 136, 189, 0.22);
+  border-radius: 22px;
+  box-shadow: 0 16px 45px rgba(31, 63, 118, 0.12);
 }
 
-.phone-frame {
-  background: #cfcfcf;
-  border: 8px solid #6d88bd;
-  border-radius: 48px;
-  box-sizing: border-box;
-  margin: 28px auto;
-  min-height: 430px;
-  padding: 34px 8px 36px;
-  position: relative;
-  width: 260px;
+.intro-card {
+  padding: clamp(20px, 5vw, 34px);
 }
 
-.phone-screen {
-  background: #ffffff;
-  border: 1px solid #d4d4d4;
-  min-height: 342px;
-  overflow: hidden;
+.eyebrow {
+  color: #4f6fa8;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0;
+  text-transform: uppercase;
 }
 
-.toolbar-area {
+.intro-card h1,
+.data-header h2 {
+  color: #14213d;
+  margin: 8px 0;
+}
+
+.intro-card h1 {
+  font-size: clamp(1.65rem, 5vw, 2.8rem);
+  line-height: 1.05;
+}
+
+.description {
+  color: #43516b;
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+
+.action-row {
   align-items: center;
   display: flex;
-  height: 48px;
-  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .refresh-button {
   --background: #0058e6;
-  --border-radius: 5px;
-  --box-shadow: none;
-  font-size: 10px;
-  height: 30px;
-  margin: 0;
-  min-height: 30px;
+  --border-radius: 10px;
+  --box-shadow: 0 8px 18px rgba(0, 88, 230, 0.22);
+  font-weight: 700;
+  min-height: 42px;
   text-transform: none;
-  width: 70px;
+}
+
+.data-count,
+.api-badge {
+  background: #eef3ff;
+  border-radius: 999px;
+  color: #34517e;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+.data-card {
+  overflow: hidden;
+}
+
+.data-header {
+  align-items: center;
+  background: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px;
+}
+
+.data-header h2 {
+  font-size: 1.25rem;
 }
 
 .crypto-list {
@@ -158,13 +231,16 @@ export default defineComponent({
 }
 
 .crypto-row {
+  --row-background: #fff0bf;
+
   align-items: center;
-  background: #fff0bf;
+  background: var(--row-background);
   border-bottom: 1px solid #d3bb73;
   display: grid;
-  grid-template-columns: 52px 1fr 92px;
-  min-height: 42px;
-  padding: 3px 8px;
+  gap: clamp(8px, 2vw, 18px);
+  grid-template-columns: minmax(52px, 0.35fr) minmax(0, 1fr) minmax(88px, 0.7fr);
+  min-height: 62px;
+  padding: clamp(10px, 2.3vw, 16px);
 }
 
 .rank-column,
@@ -183,13 +259,13 @@ export default defineComponent({
 .name-column span,
 .price-column span {
   color: #000000;
-  font-size: 8px;
+  font-size: clamp(0.66rem, 1.7vw, 0.8rem);
   line-height: 1.1;
 }
 
 .rank-column strong {
   color: #000000;
-  font-size: 17px;
+  font-size: clamp(1.35rem, 4vw, 1.65rem);
   font-weight: 400;
   line-height: 1.1;
 }
@@ -197,7 +273,7 @@ export default defineComponent({
 .name-column strong,
 .price-column strong {
   color: #000000;
-  font-size: 16px;
+  font-size: clamp(1.05rem, 3.5vw, 1.4rem);
   font-weight: 500;
   line-height: 1.1;
 }
@@ -214,8 +290,8 @@ export default defineComponent({
 
 .state-message {
   color: #333333;
-  font-size: 12px;
-  margin: 24px 12px;
+  font-size: 0.95rem;
+  margin: 28px 18px;
   text-align: center;
 }
 
@@ -223,14 +299,48 @@ export default defineComponent({
   color: #c5000f;
 }
 
-.home-indicator {
-  background: #ffffff;
-  border-radius: 999px;
-  bottom: 14px;
-  height: 15px;
-  left: 50%;
-  position: absolute;
-  transform: translateX(-50%);
-  width: 60px;
+@media (max-width: 520px) {
+  .app-shell {
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .intro-card,
+  .data-card {
+    border-radius: 16px;
+  }
+
+  .data-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .crypto-row {
+    grid-template-columns: 52px minmax(0, 1fr) minmax(82px, 0.7fr);
+    min-height: 56px;
+  }
+}
+
+@media (min-width: 720px) {
+  .app-shell {
+    max-width: 760px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    max-width: 1120px;
+  }
+
+  .intro-card {
+    position: sticky;
+    top: 24px;
+  }
+
+  .crypto-list {
+    max-height: calc(100vh - 190px);
+    overflow: auto;
+  }
 }
 </style>
