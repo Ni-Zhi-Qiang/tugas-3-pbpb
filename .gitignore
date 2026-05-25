@@ -2,3 +2,8 @@ node_modules
 dist
 .DS_Store
 *.local
+/.vs/slnx.sqlite
+/.vs/slnx.sqlite-journal
+/.vs/crypto-app.slnx/FileContentIndex/1a983f07-d64c-45d0-a9e0-ac70e3aeb7af.vsidx
+/.vs/crypto-app.slnx/FileContentIndex/c4c2a009-8c8a-48dc-8fd8-77d2615641fd.vsidx
+/.vs/crypto-app.slnx/FileContentIndex

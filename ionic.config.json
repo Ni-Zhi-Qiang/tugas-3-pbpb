@@ -1,5 +1,5 @@
 {
   "name": "crypto-app",
   "integrations": {},
-  "type": "vue"
+  "type": "vue-vite"
 }
